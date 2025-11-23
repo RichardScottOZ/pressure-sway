@@ -7,6 +7,7 @@ Monitors BOM (Bureau of Meteorology) website for pressure drops
 import json
 import logging
 import os
+import re
 import sys
 from datetime import datetime
 from typing import Optional, Dict, Any
@@ -84,12 +85,15 @@ class PressureMonitor:
                         # Try to get value from next cell or same row
                         if i + 1 < len(cells):
                             value_text = cells[i + 1].get_text(strip=True)
-                            try:
-                                # Extract numeric value
-                                pressure_value = float(value_text.split()[0])
-                                break
-                            except (ValueError, IndexError):
-                                continue
+                            if value_text:
+                                try:
+                                    # Extract numeric value
+                                    parts = value_text.split()
+                                    if parts:
+                                        pressure_value = float(parts[0])
+                                        break
+                                except (ValueError, IndexError):
+                                    continue
                 
                 if pressure_value:
                     break
@@ -102,7 +106,6 @@ class PressureMonitor:
                 for line in lines:
                     if 'pressure' in line.lower() or 'qnh' in line.lower():
                         # Try to extract number followed by hPa
-                        import re
                         match = re.search(r'(\d+\.?\d*)\s*hPa', line)
                         if match:
                             pressure_value = float(match.group(1))

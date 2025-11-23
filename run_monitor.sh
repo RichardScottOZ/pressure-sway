@@ -14,7 +14,7 @@ while true; do
     echo "Running pressure check at $(date)"
     echo "=========================================="
     
-    python pressure_monitor.py
+    python3 pressure_monitor.py
     
     echo ""
     echo "Next check in ${INTERVAL} seconds ($(($INTERVAL / 60)) minutes)"
