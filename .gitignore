@@ -194,6 +194,10 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+# Pressure monitor data and logs
+pressure_data.json
+pressure_monitor.log
+
 # Cursor
 #  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
 #  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
