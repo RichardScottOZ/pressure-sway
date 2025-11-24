@@ -59,11 +59,12 @@ python pressure_monitor.py
 
 The application is set up to run automatically in GitHub Actions:
 
-- **Runs every hour** via scheduled cron job
+- **Runs every hour** via scheduled cron job (at the top of each hour: 00:00, 01:00, 02:00, etc. UTC)
 - **Zero cost** - runs on GitHub's free tier
 - **Minimal resources** - uses ubuntu-latest runner
 - **Persistent data** - uses GitHub Actions cache for storing last reading
 - **Logs archived** - logs are saved as artifacts for 30 days
+- **Email notifications** - get alerts for pressure drops and workflow failures
 
 #### Enable GitHub Actions:
 
@@ -71,6 +72,18 @@ The application is set up to run automatically in GitHub Actions:
 2. Go to the "Actions" tab in your repository
 3. Enable workflows if prompted
 4. The workflow will run automatically every hour
+
+#### Important Notes for Scheduled Runs:
+
+⚠️ **GitHub Actions scheduled workflows require**:
+- The workflow file must be in the **default branch** (main or master)
+- The repository should have **recent activity** (commits, pushes, or manual workflow runs)
+- GitHub may **disable scheduled workflows** after 60 days of repository inactivity
+- If disabled, make any commit or manually run the workflow to re-enable it
+
+💡 **To keep schedules active**: 
+- Manually trigger the workflow occasionally if no commits are being made
+- GitHub will send a notification email if scheduled workflows are disabled due to inactivity
 
 #### Manual Trigger:
 
@@ -81,12 +94,15 @@ You can also trigger a check manually - **see [MANUAL_RUN.md](MANUAL_RUN.md)** f
 
 #### Getting Notifications:
 
-See **[NOTIFICATIONS.md](NOTIFICATIONS.md)** for detailed setup instructions for:
-- Email notifications
-- Slack/Discord alerts
-- SMS notifications
-- Push notifications (Pushover)
-- Custom webhooks
+**Email notifications are now built into the workflow!** Just configure three GitHub secrets to enable them:
+- `EMAIL_USERNAME` - Your Gmail address
+- `EMAIL_PASSWORD` - Gmail app-specific password
+- `EMAIL_TO` - Where to send alerts
+
+See **[NOTIFICATIONS.md](NOTIFICATIONS.md)** for:
+- **Email setup instructions** (Option 1 - Recommended)
+- Alternative notification methods (Slack, Discord, SMS, Push notifications)
+- Troubleshooting tips
 
 ## Configuration
 
