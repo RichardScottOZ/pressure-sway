@@ -1,13 +1,32 @@
 # Quick Setup Guide for Email Notifications
 
-This guide will help you set up email notifications in under 5 minutes.
+## TL;DR - Zero Setup Option (Recommended)
 
-## Prerequisites
+**GitHub already sends you email notifications for workflow failures!** No setup required.
 
-- A Gmail account
+- Goes to your GitHub notification email address
+- Works immediately for workflow failures
+- Completely free, no configuration needed
+- Check/configure your email at: https://github.com/settings/notifications
+
+**The setup guide below is ONLY needed if you want custom email alerts for pressure drops.**
+
+---
+
+## Custom Pressure Drop Email Setup (Optional)
+
+This guide will help you set up custom email notifications for pressure drops in under 5 minutes.
+
+### Prerequisites
+
+- A Gmail account (this guide covers Gmail specifically - see NOTIFICATIONS.md for other providers)
 - Access to your GitHub repository settings
 
 ## Step-by-Step Setup
+
+### Why This Setup?
+
+This optional setup allows you to receive **custom email alerts for pressure drops** in addition to GitHub's native workflow failure notifications. If you only want to know when the workflow fails (not specific pressure drops), you don't need this setup.
 
 ### Step 1: Enable 2-Factor Authentication on Gmail
 

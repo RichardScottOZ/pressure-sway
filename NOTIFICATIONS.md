@@ -2,13 +2,61 @@
 
 This guide shows you different ways to receive notifications when barometric pressure drops are detected.
 
-## Option 1: GitHub Actions Email Notifications (Configured - Recommended)
+> 💡 **Quick Answer:** Yes, GitHub can send email notifications without Gmail or any third-party service! See [GITHUB_NATIVE_NOTIFICATIONS.md](GITHUB_NATIVE_NOTIFICATIONS.md) for details.
 
-**UPDATE**: The workflow has been updated to automatically send email notifications for both pressure drops and workflow failures. Follow the setup below to enable it.
+## Option 1: GitHub Native Email Notifications (FREE - No Setup Required - RECOMMENDED)
+
+**GitHub automatically sends email notifications for workflow failures to your GitHub notification email.** This is completely free and requires **zero configuration**. 
+
+### How It Works
+
+- GitHub sends emails to the address you use for GitHub notifications (check Settings → Notifications)
+- **By default**, you'll receive emails when:
+  - The workflow fails (e.g., network issues, script errors)
+  - The workflow job fails or is cancelled
+- **Optional**: You can also enable success notifications in your GitHub settings (https://github.com/settings/notifications)
+- **No setup required** - works immediately for repository owners and watchers
+- Goes to the same email you receive other GitHub notifications at
+
+### What You Get
+
+✅ **Free** - No third-party services needed  
+✅ **Zero configuration** - Works out of the box  
+✅ **Standard GitHub notifications** - Same format as other GitHub emails  
+✅ **Reliable** - Managed by GitHub's infrastructure  
+
+### Limitations
+
+⚠️ **Important:** GitHub's native notifications are **workflow-level only**. They tell you if the workflow succeeded or failed, but they don't report custom conditions like pressure drops detected within the workflow.
+
+- Native notifications: "Workflow succeeded" or "Workflow failed"
+- They do NOT say: "Workflow succeeded and detected a pressure drop"
+
+For notifications specifically about pressure drops, you must use Option 2 (custom Gmail alerts) below.
+
+### Configure Your GitHub Notification Email
+
+1. Go to GitHub Settings: https://github.com/settings/notifications
+2. Verify your notification email address
+3. Ensure "Actions" notifications are enabled (should be on by default)
+4. **Optional**: Enable notifications for successful workflow runs in the Actions section
+5. Done! You'll now receive emails when workflows fail (and succeed, if you enabled that option)
+
+### Testing
+
+1. Go to your repository's Actions tab
+2. Manually run the workflow
+3. If it fails, you'll receive an email notification automatically
+
+---
+
+## Option 2: Custom Email Notifications via Gmail (For Pressure Drop Alerts)
+
+**Use this option if you want email notifications for pressure drop alerts in addition to workflow failures.**
 
 ### Setup Email Notifications
 
-To receive email notifications, you need to configure Gmail app-specific password:
+To receive custom email notifications for pressure drops, you need to configure Gmail app-specific password:
 
 1. **Enable 2-factor authentication on your Google account** (required)
 2. **Generate an app-specific password**:
@@ -47,9 +95,9 @@ If you don't receive emails:
 - Make sure the app-specific password was generated correctly
 - Check the workflow logs for any email sending errors
 
-## Option 2: Alternative Email Providers
+## Option 3: Alternative Email Providers (For Custom Alerts)
 
-If you prefer not to use Gmail, you can use other email providers by modifying the workflow secrets:
+If you prefer not to use Gmail for custom pressure drop alerts, you can use other email providers by modifying the workflow secrets:
 
 ### Using Other SMTP Providers
 
@@ -64,7 +112,7 @@ To use a different provider:
 2. Change `server_address` and `server_port` in both email notification steps
 3. Use appropriate credentials in your GitHub secrets
 
-## Option 3: Slack Notifications
+## Option 4: Slack Notifications
 
 Send alerts to a Slack channel.
 
@@ -111,7 +159,7 @@ Send alerts to a Slack channel.
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 ```
 
-## Option 4: Discord Notifications
+## Option 5: Discord Notifications
 
 Send alerts to a Discord channel.
 
@@ -137,7 +185,7 @@ Send alerts to a Discord channel.
              ${{ secrets.DISCORD_WEBHOOK_URL }}
 ```
 
-## Option 5: Custom Webhook
+## Option 6: Custom Webhook
 
 Send alerts to any custom webhook endpoint.
 
@@ -164,7 +212,7 @@ Send alerts to any custom webhook endpoint.
              }"
 ```
 
-## Option 6: SMS Notifications (via Twilio)
+## Option 7: SMS Notifications (via Twilio)
 
 Send SMS alerts using Twilio.
 
@@ -193,7 +241,7 @@ Send SMS alerts using Twilio.
 
 Note: Twilio charges per SMS (typically $0.0075-$0.01 per message).
 
-## Option 7: Push Notifications (via Pushover)
+## Option 8: Push Notifications (via Pushover)
 
 Send push notifications to your mobile device using Pushover.
 
@@ -271,12 +319,17 @@ If you don't want active notifications, you can:
 
 ## Recommendation
 
-For most users, **Option 2 (Email)** or **Option 5 (Pushover)** work best:
-- Email: Free, reliable, works everywhere
-- Pushover: One-time payment, excellent mobile notifications
+**For most users, Option 1 (GitHub Native Notifications) is the best choice:**
+- ✅ **Free** - No third-party services
+- ✅ **Zero setup** - Works immediately
+- ✅ **Reliable** - Uses GitHub's infrastructure
+- ⚠️ **Limitation**: Only alerts on workflow failures, not pressure drops
 
-Choose based on:
-- **Free + simple**: Email (Option 2)
-- **Best mobile experience**: Pushover (Option 7)
-- **Team notifications**: Slack (Option 3) or Discord (Option 4)
-- **Immediate alerts**: SMS (Option 6) - but costs per message
+**If you also want pressure drop alerts:**
+- Use **Option 1** for workflow failures (free, no setup)
+- Add **Option 2** (Gmail) for pressure drop alerts (requires setup)
+
+**Other options:**
+- **Best mobile experience**: Option 8 (Pushover) - one-time payment
+- **Team notifications**: Option 4 (Slack) or Option 5 (Discord)
+- **Immediate alerts**: Option 7 (SMS) - costs per message
