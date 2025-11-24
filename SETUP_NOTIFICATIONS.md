@@ -19,7 +19,7 @@ This guide will help you set up custom email notifications for pressure drops in
 
 ### Prerequisites
 
-- A Gmail account (or other email provider)
+- A Gmail account (this guide covers Gmail specifically - see NOTIFICATIONS.md for other providers)
 - Access to your GitHub repository settings
 
 ## Step-by-Step Setup

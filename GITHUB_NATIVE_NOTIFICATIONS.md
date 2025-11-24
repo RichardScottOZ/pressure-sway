@@ -102,4 +102,4 @@ The email includes:
 
 - [NOTIFICATIONS.md](NOTIFICATIONS.md) - All notification options
 - [SETUP_NOTIFICATIONS.md](SETUP_NOTIFICATIONS.md) - Setting up custom Gmail alerts
-- GitHub Docs: https://docs.github.com/en/account-and-settings/managing-subscriptions-and-notifications-on-github/setting-up-notifications/configuring-notifications
+- [GitHub Notifications Documentation](https://docs.github.com/en/account-and-settings/managing-subscriptions-and-notifications-on-github)
