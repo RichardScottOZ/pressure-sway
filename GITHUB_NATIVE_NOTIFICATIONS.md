@@ -67,21 +67,33 @@ You can also enable success notifications through GitHub's native system:
 - ✅ Free forever
 - ✅ Reliable (GitHub infrastructure)
 - ❌ Cannot customize message content
-- ❌ Cannot alert on custom conditions (like pressure drops)
+- ❌ **Cannot alert on custom conditions (like pressure drops)**
+- ❌ **Only reports workflow status, not what happened inside the workflow**
+
+**Example notification:** "Workflow run succeeded" (even if pressure drop was detected)
 
 ### Custom Email via Gmail (Requires Setup)
-- ✅ Can alert on custom conditions (pressure drops)
+- ✅ **Can alert on custom conditions (pressure drops)**
+- ✅ **Sends detailed alerts about what was detected**
 - ✅ Fully customizable email content
 - ✅ Can choose exact recipient
 - ❌ Requires Gmail app-specific password setup
 - ❌ Requires adding GitHub secrets
 - ❌ Depends on third-party email service
 
+**Example notification:** "⚠️ Barometric Pressure Drop Detected - Current: 1010 hPa, Previous: 1013 hPa"
+
 ## Recommendation
 
-**For most users:** Use GitHub's native notifications (no setup required)
+**For workflow monitoring only:** Use GitHub's native notifications (no setup required)
+- You'll know if the workflow fails to run
+- You'll know if the workflow succeeds (if you enable success notifications)
+- You won't know about pressure drops detected within successful workflows
 
-**Add custom email alerts only if:** You want notifications for specific events like pressure drops, not just workflow failures
+**For pressure drop alerts:** You must use custom email alerts (Option 2 in NOTIFICATIONS.md)
+- Native notifications can't report custom conditions like pressure drops
+- Custom Gmail alerts send separate emails when pressure drops are detected
+- These work independently from the workflow success/failure status
 
 ## Frequently Asked Questions
 
@@ -103,8 +115,11 @@ You can also enable success notifications through GitHub's native system:
 ### Q: Can I get success notifications without third-party integrations?
 **A:** Yes! GitHub's native notification system supports success notifications. Go to https://github.com/settings/notifications and configure the Actions section to include successful workflow runs. This is a built-in GitHub feature - no third-party services needed.
 
+### Q: Will GitHub's native success notification tell me about pressure drops?
+**A:** No. GitHub's native notifications only report **workflow-level status** (success/failure/cancelled). They don't know about custom conditions like pressure drops that occur within the workflow. Even if a pressure drop is detected, the workflow completes successfully, so you'd just get a generic "workflow succeeded" email with no mention of the pressure drop.
+
 ### Q: What if I want notifications for pressure drops, not just failures?
-**A:** You'll need to set up custom email alerts using Gmail (see SETUP_NOTIFICATIONS.md). The native notifications only cover workflow status (success/failure/cancelled), not custom conditions within the workflow.
+**A:** You'll need to set up custom email alerts using Gmail (see SETUP_NOTIFICATIONS.md). The native notifications only cover workflow status (success/failure/cancelled), not custom conditions within the workflow. The custom Gmail integration sends a separate email specifically when pressure drops are detected, with details about the drop.
 
 ## Testing Native Notifications
 

@@ -27,7 +27,12 @@ This guide shows you different ways to receive notifications when barometric pre
 
 ### Limitations
 
-⚠️ GitHub's native notifications alert on **workflow status** (failure by default, success if enabled), not on custom alerts like pressure drops. For pressure drop alerts, see Option 2 below.
+⚠️ **Important:** GitHub's native notifications are **workflow-level only**. They tell you if the workflow succeeded or failed, but they don't report custom conditions like pressure drops detected within the workflow.
+
+- Native notifications: "Workflow succeeded" or "Workflow failed"
+- They do NOT say: "Workflow succeeded and detected a pressure drop"
+
+For notifications specifically about pressure drops, you must use Option 2 (custom Gmail alerts) below.
 
 ### Configure Your GitHub Notification Email
 
