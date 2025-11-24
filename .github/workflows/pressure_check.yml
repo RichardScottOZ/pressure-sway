@@ -66,6 +66,13 @@ jobs:
         else
           echo "alert_found=false" >> $GITHUB_OUTPUT
         fi
+
+    - name: Send Discord notification
+      if: steps.check_alerts.outputs.alert_found == 'true'
+      run: |
+        curl -H "Content-Type: application/json" \
+             -d "{\"content\": \"⚠️ **Barometric Pressure Drop Detected**\n\nCheck logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
+             ${{ secrets.DISCORD_WEBHOOK_URL }}
     
     - name: Send email notification for pressure drop
       if: steps.check_alerts.outputs.alert_found == 'true' && env.EMAIL_CONFIGURED == 'true'
