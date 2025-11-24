@@ -80,10 +80,13 @@ The application is set up to run automatically in GitHub Actions:
 - The repository should have **recent activity** (commits, pushes, or manual workflow runs)
 - GitHub may **disable scheduled workflows** after 60 days of repository inactivity
 - If disabled, make any commit or manually run the workflow to re-enable it
+- Scheduled runs use **UTC timezone** and may have 5-15 minute delays
 
 💡 **To keep schedules active**: 
 - Manually trigger the workflow occasionally if no commits are being made
 - GitHub will send a notification email if scheduled workflows are disabled due to inactivity
+
+📖 **For detailed information about scheduled runs**, see [SCHEDULED_RUNS.md](SCHEDULED_RUNS.md)
 
 #### Manual Trigger:
 
