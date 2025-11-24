@@ -107,7 +107,7 @@ Common issues:
 
 ## Next Steps
 
-- Wait for the hourly schedule to run automatically (every hour at :00)
+- Wait for the hourly schedule to run automatically (every hour at :00 UTC)
 - Monitor the Actions tab to see scheduled runs
 - Adjust the pressure threshold in `config.json` if needed
 - Review NOTIFICATIONS.md for alternative notification methods (Slack, Discord, etc.)
