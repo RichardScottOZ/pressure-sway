@@ -163,15 +163,16 @@ Send alerts to any custom webhook endpoint.
     - name: Send webhook notification
       if: steps.check_alerts.outputs.alert_found == 'true'
       run: |
+        TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
         curl -X POST ${{ secrets.CUSTOM_WEBHOOK_URL }} \
              -H "Content-Type: application/json" \
-             -d '{
-               "event": "pressure_drop",
-               "message": "Barometric pressure drop detected",
-               "repository": "${{ github.repository }}",
-               "run_id": "${{ github.run_id }}",
-               "timestamp": "${{ github.event.head_commit.timestamp }}"
-             }'
+             -d "{
+               \"event\": \"pressure_drop\",
+               \"message\": \"Barometric pressure drop detected\",
+               \"repository\": \"${{ github.repository }}\",
+               \"run_id\": \"${{ github.run_id }}\",
+               \"timestamp\": \"$TIMESTAMP\"
+             }"
 ```
 
 ## Option 6: SMS Notifications (via Twilio)

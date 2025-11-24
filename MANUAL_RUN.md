@@ -107,8 +107,6 @@ Run the pressure monitor on your own computer without GitHub.
 
 3. **Install dependencies**
    ```bash
-   pip install -r requirements.txt
-   # or with pip3:
    pip3 install -r requirements.txt
    ```
 
@@ -301,7 +299,7 @@ User=pi
 WorkingDirectory=/home/pi/pressure-sway
 ExecStart=/usr/bin/python3 /home/pi/pressure-sway/pressure_monitor.py
 Restart=always
-RestartSec=3600
+RestartSec=30
 
 [Install]
 WantedBy=multi-user.target
@@ -376,8 +374,6 @@ cat pressure_data.json
 ### "ModuleNotFoundError" when running locally
 ```bash
 pip3 install -r requirements.txt
-# or
-pip install -r requirements.txt
 ```
 
 ### Can't access BOM website locally
