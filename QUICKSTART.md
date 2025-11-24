@@ -9,9 +9,15 @@
    - Click "I understand my workflows, go ahead and enable them"
 
 3. **That's it!** 
-   - The monitor will automatically run every 30 minutes
+   - The monitor will automatically run every hour
    - Check the Actions tab to see runs and logs
    - Download logs as artifacts to review pressure data
+
+4. **Optional: Set up notifications**
+   - See [NOTIFICATIONS.md](NOTIFICATIONS.md) for email, Slack, SMS, and more
+
+5. **Run manually anytime**
+   - See [MANUAL_RUN.md](MANUAL_RUN.md) for instructions
 
 ## Run Locally (5 minutes)
 
@@ -26,8 +32,11 @@ pip install -r requirements.txt
 # Run once
 python pressure_monitor.py
 
-# Run continuously (checks every 30 minutes)
+# Run continuously (checks every hour by default)
 ./run_monitor.sh
+
+# Or customize the interval (e.g., every 30 minutes)
+CHECK_INTERVAL=1800 ./run_monitor.sh
 ```
 
 ## Run with Docker

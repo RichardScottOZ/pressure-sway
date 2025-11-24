@@ -1,7 +1,7 @@
 {
   "station_url": "https://www.bom.gov.au/products/IDS60901/IDS60901.94648.shtml",
   "pressure_drop_threshold_hpa": 2.0,
-  "check_interval_minutes": 30,
+  "check_interval_minutes": 60,
   "data_file": "pressure_data.json",
   "log_file": "pressure_monitor.log"
 }

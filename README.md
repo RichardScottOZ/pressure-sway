@@ -22,7 +22,7 @@ This application monitors barometric pressure from the Australian Bureau of Mete
 3. Compares with the last recorded reading
 4. If pressure has dropped by more than the threshold, logs a warning
 5. Saves the current reading for next comparison
-6. GitHub Actions runs this every 30 minutes automatically
+6. GitHub Actions runs this every hour automatically
 
 ## Setup
 
@@ -44,7 +44,7 @@ pip install -r requirements.txt
 {
   "station_url": "https://www.bom.gov.au/products/IDS60901/IDS60901.94648.shtml",
   "pressure_drop_threshold_hpa": 2.0,
-  "check_interval_minutes": 30,
+  "check_interval_minutes": 60,
   "data_file": "pressure_data.json",
   "log_file": "pressure_monitor.log"
 }
@@ -59,7 +59,7 @@ python pressure_monitor.py
 
 The application is set up to run automatically in GitHub Actions:
 
-- **Runs every 30 minutes** via scheduled cron job
+- **Runs every hour** via scheduled cron job
 - **Zero cost** - runs on GitHub's free tier
 - **Minimal resources** - uses ubuntu-latest runner
 - **Persistent data** - uses GitHub Actions cache for storing last reading
@@ -70,14 +70,23 @@ The application is set up to run automatically in GitHub Actions:
 1. Fork or push this repository to GitHub
 2. Go to the "Actions" tab in your repository
 3. Enable workflows if prompted
-4. The workflow will run automatically every 30 minutes
+4. The workflow will run automatically every hour
 
 #### Manual Trigger:
 
-You can also trigger a check manually:
+You can also trigger a check manually - **see [MANUAL_RUN.md](MANUAL_RUN.md)** for detailed instructions:
 1. Go to Actions tab
 2. Select "Barometric Pressure Check" workflow
 3. Click "Run workflow"
+
+#### Getting Notifications:
+
+See **[NOTIFICATIONS.md](NOTIFICATIONS.md)** for detailed setup instructions for:
+- Email notifications
+- Slack/Discord alerts
+- SMS notifications
+- Push notifications (Pushover)
+- Custom webhooks
 
 ## Configuration
 

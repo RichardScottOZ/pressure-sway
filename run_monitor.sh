@@ -2,8 +2,8 @@
 # Continuous pressure monitoring script
 # Runs the pressure monitor in a loop with configurable interval
 
-# Default interval: 30 minutes (1800 seconds)
-INTERVAL=${CHECK_INTERVAL:-1800}
+# Default interval: 60 minutes (3600 seconds)
+INTERVAL=${CHECK_INTERVAL:-3600}
 
 echo "Starting pressure monitor (checking every ${INTERVAL} seconds)"
 echo "Press Ctrl+C to stop"

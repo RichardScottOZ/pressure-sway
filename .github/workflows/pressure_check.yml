@@ -1,10 +1,10 @@
 name: Barometric Pressure Check
 
 on:
-  # Run every 30 minutes
+  # Run every hour (on the hour)
   schedule:
-    - cron: '*/30 * * * *'
-  # Allow manual trigger
+    - cron: '0 * * * *'
+  # Allow manual trigger from GitHub Actions UI
   workflow_dispatch:
   # Run on push for testing
   push:
