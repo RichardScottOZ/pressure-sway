@@ -30,13 +30,25 @@ GitHub automatically sends email notifications to:
 
 ## What Notifications You'll Receive
 
-GitHub will automatically email you when:
-- ✅ A workflow run fails
-- ✅ A workflow job fails
-- ✅ A workflow is cancelled
-- ✅ A workflow succeeds (if configured in your notification settings)
+### By Default (No Configuration Needed)
 
-The email includes:
+GitHub will automatically email you when:
+- ✅ A workflow run **fails**
+- ✅ A workflow job **fails**
+- ✅ A workflow is **cancelled**
+
+### Optional: Success Notifications
+
+You can also enable success notifications through GitHub's native system:
+
+1. Go to: https://github.com/settings/notifications
+2. Scroll to "Actions" section
+3. Configure notifications for successful workflow runs
+
+**Note:** Success notifications are **not enabled by default** - you must explicitly enable them in your GitHub notification settings. This is a native GitHub feature and doesn't require any third-party integrations.
+
+### What Each Email Includes
+
 - Workflow name and status
 - Direct link to the workflow run
 - Timestamp and triggering event
@@ -49,7 +61,8 @@ The email includes:
 ## Comparison: Native vs Custom Email Notifications
 
 ### GitHub Native Notifications (Free, No Setup)
-- ✅ Alerts on workflow failures
+- ✅ Alerts on workflow failures (default)
+- ✅ Can enable alerts on workflow success (optional, in settings)
 - ✅ Zero configuration required
 - ✅ Free forever
 - ✅ Reliable (GitHub infrastructure)
@@ -82,13 +95,16 @@ The email includes:
 **A:** No, GitHub's native notifications have a standard format. For custom content, you'd need to set up custom email alerts (Option 2 in NOTIFICATIONS.md).
 
 ### Q: Will I receive too many emails?
-**A:** Only if workflows fail. Successful runs don't send emails by default. You can adjust this in your GitHub notification settings.
+**A:** By default, you only receive emails for workflow failures. Success notifications are opt-in - you can enable them in your GitHub notification settings at https://github.com/settings/notifications if you want to be notified of successful runs too.
 
 ### Q: Does this work for scheduled workflows?
 **A:** Yes! GitHub sends notifications for scheduled workflow failures just like manually triggered ones.
 
+### Q: Can I get success notifications without third-party integrations?
+**A:** Yes! GitHub's native notification system supports success notifications. Go to https://github.com/settings/notifications and configure the Actions section to include successful workflow runs. This is a built-in GitHub feature - no third-party services needed.
+
 ### Q: What if I want notifications for pressure drops, not just failures?
-**A:** You'll need to set up custom email alerts using Gmail (see SETUP_NOTIFICATIONS.md). The native notifications only cover workflow failures.
+**A:** You'll need to set up custom email alerts using Gmail (see SETUP_NOTIFICATIONS.md). The native notifications only cover workflow status (success/failure/cancelled), not custom conditions within the workflow.
 
 ## Testing Native Notifications
 

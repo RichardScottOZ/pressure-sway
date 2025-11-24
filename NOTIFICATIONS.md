@@ -11,9 +11,10 @@ This guide shows you different ways to receive notifications when barometric pre
 ### How It Works
 
 - GitHub sends emails to the address you use for GitHub notifications (check Settings → Notifications)
-- You'll receive emails when:
+- **By default**, you'll receive emails when:
   - The workflow fails (e.g., network issues, script errors)
   - The workflow job fails or is cancelled
+- **Optional**: You can also enable success notifications in your GitHub settings (https://github.com/settings/notifications)
 - **No setup required** - works immediately for repository owners and watchers
 - Goes to the same email you receive other GitHub notifications at
 
@@ -26,14 +27,15 @@ This guide shows you different ways to receive notifications when barometric pre
 
 ### Limitations
 
-⚠️ GitHub's native notifications only alert on **workflow failures**, not on custom alerts like pressure drops. For pressure drop alerts, see Option 2 below.
+⚠️ GitHub's native notifications alert on **workflow status** (failure by default, success if enabled), not on custom alerts like pressure drops. For pressure drop alerts, see Option 2 below.
 
 ### Configure Your GitHub Notification Email
 
 1. Go to GitHub Settings: https://github.com/settings/notifications
 2. Verify your notification email address
 3. Ensure "Actions" notifications are enabled (should be on by default)
-4. Done! You'll now receive emails when workflows fail
+4. **Optional**: Enable notifications for successful workflow runs in the Actions section
+5. Done! You'll now receive emails when workflows fail (and succeed, if you enabled that option)
 
 ### Testing
 
