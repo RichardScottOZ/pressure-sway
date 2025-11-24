@@ -42,6 +42,66 @@ jobs:
     - name: Run pressure monitor
       run: python pressure_monitor.py
     
+    - name: Check for pressure drop alerts
+      id: check_alerts
+      if: always()
+      run: |
+        if [ -f pressure_monitor.log ]; then
+          if grep -q "PRESSURE DROP DETECTED" pressure_monitor.log; then
+            echo "alert_found=true" >> $GITHUB_OUTPUT
+            echo "ALERT_MESSAGE<<EOF" >> $GITHUB_OUTPUT
+            grep -A 5 "PRESSURE DROP DETECTED" pressure_monitor.log | tail -6 >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "alert_found=false" >> $GITHUB_OUTPUT
+          fi
+        else
+          echo "alert_found=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Send email notification for pressure drop
+      if: steps.check_alerts.outputs.alert_found == 'true'
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 587
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: '⚠️ Barometric Pressure Drop Detected'
+        to: ${{ secrets.EMAIL_TO }}
+        from: Pressure Monitor <${{ secrets.EMAIL_USERNAME }}>
+        body: |
+          A significant barometric pressure drop has been detected:
+          
+          ${{ steps.check_alerts.outputs.ALERT_MESSAGE }}
+          
+          View full logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          
+          This is an automated alert from your Barometric Pressure Monitor.
+      continue-on-error: true
+    
+    - name: Send email notification for workflow failure
+      if: failure()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 587
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: '❌ Pressure Monitor Workflow Failed'
+        to: ${{ secrets.EMAIL_TO }}
+        from: Pressure Monitor <${{ secrets.EMAIL_USERNAME }}>
+        body: |
+          The barometric pressure monitoring workflow has failed.
+          
+          Workflow: ${{ github.workflow }}
+          Run Number: ${{ github.run_number }}
+          
+          View details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          
+          Please check the logs for more information.
+      continue-on-error: true
+    
     - name: Save pressure data
       uses: actions/cache/save@v4
       if: always()

@@ -2,78 +2,67 @@
 
 This guide shows you different ways to receive notifications when barometric pressure drops are detected.
 
-## Option 1: GitHub Actions Email Notifications (Easiest)
+## Option 1: GitHub Actions Email Notifications (Configured - Recommended)
 
-GitHub can email you when workflows fail or complete with warnings.
+**UPDATE**: The workflow has been updated to automatically send email notifications for both pressure drops and workflow failures. Follow the setup below to enable it.
 
-### Enable Email Notifications
+### Setup Email Notifications
 
-1. Go to your repository on GitHub
-2. Click "Actions" tab
-3. Click on a workflow run
-4. Click "Watch" or configure in: **Settings → Notifications → Actions**
+To receive email notifications, you need to configure Gmail app-specific password:
 
-You'll receive emails when:
-- Workflow fails (e.g., can't fetch data)
-- Warnings are logged (pressure drops)
+1. **Enable 2-factor authentication on your Google account** (required)
+2. **Generate an app-specific password**:
+   - Go to: https://myaccount.google.com/apppasswords
+   - Select "Mail" as the app
+   - Generate the password and copy it
 
-### Limitations
-- Only notifies on workflow failures or completion
-- Doesn't send real-time alerts for pressure drops mid-run
+3. **Add secrets to your GitHub repository**:
+   - Go to your repository on GitHub
+   - Navigate to **Settings → Secrets and variables → Actions**
+   - Click **New repository secret** and add these three secrets:
+     - `EMAIL_USERNAME`: Your full Gmail address (e.g., your.email@gmail.com)
+     - `EMAIL_PASSWORD`: The app-specific password you just generated (NOT your regular Gmail password)
+     - `EMAIL_TO`: The email address where you want to receive alerts (can be the same as EMAIL_USERNAME)
 
-## Option 2: GitHub Actions with Email Action (Recommended)
+### What You'll Receive
 
-Add email notifications directly to the workflow.
+Once configured, you'll automatically receive emails for:
+- **Pressure Drop Alerts**: When significant barometric pressure drops are detected
+- **Workflow Failures**: When the monitoring workflow fails to run
 
-### Setup
+### Testing Your Setup
 
-1. Add email credentials to GitHub Secrets:
-   - Go to **Settings → Secrets and variables → Actions**
-   - Add these secrets:
-     - `EMAIL_USERNAME`: Your Gmail address
-     - `EMAIL_PASSWORD`: Gmail app-specific password (not your regular password)
-     - `EMAIL_TO`: Email address to receive alerts
+After configuring the secrets:
+1. Go to **Actions** tab in your repository
+2. Select **"Barometric Pressure Check"** workflow
+3. Click **"Run workflow"** button to manually trigger it
+4. Wait for completion - you should receive an email if any alerts are detected
 
-2. Update `.github/workflows/pressure_check.yml`:
+### Troubleshooting
 
-Add this step after "Run pressure monitor":
+If you don't receive emails:
+- Verify all three secrets are set correctly (no extra spaces)
+- Check your spam/junk folder
+- Ensure 2FA is enabled on your Google account
+- Make sure the app-specific password was generated correctly
+- Check the workflow logs for any email sending errors
 
-```yaml
-    - name: Check for pressure drop alerts
-      id: check_alerts
-      run: |
-        if grep -q "PRESSURE DROP DETECTED" pressure_monitor.log; then
-          echo "alert_found=true" >> $GITHUB_OUTPUT
-          echo "ALERT_MESSAGE<<EOF" >> $GITHUB_OUTPUT
-          grep -A 5 "PRESSURE DROP DETECTED" pressure_monitor.log | tail -6 >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-        fi
+## Option 2: Alternative Email Providers
 
-    - name: Send email notification
-      if: steps.check_alerts.outputs.alert_found == 'true'
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: smtp.gmail.com
-        server_port: 587
-        username: ${{ secrets.EMAIL_USERNAME }}
-        password: ${{ secrets.EMAIL_PASSWORD }}
-        subject: '⚠️ Barometric Pressure Drop Detected'
-        to: ${{ secrets.EMAIL_TO }}
-        from: Pressure Monitor
-        body: |
-          A significant barometric pressure drop has been detected:
-          
-          ${{ steps.check_alerts.outputs.ALERT_MESSAGE }}
-          
-          View full logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-```
+If you prefer not to use Gmail, you can use other email providers by modifying the workflow secrets:
 
-### Gmail App-Specific Password
+### Using Other SMTP Providers
 
-1. Enable 2-factor authentication on your Google account
-2. Go to: https://myaccount.google.com/apppasswords
-3. Generate an app password for "Mail"
-4. Use this password in `EMAIL_PASSWORD` secret
+The workflow uses standard SMTP, so you can configure it with:
+- **Outlook/Hotmail**: server_address: smtp.office365.com, port: 587
+- **Yahoo Mail**: server_address: smtp.mail.yahoo.com, port: 587
+- **SendGrid**: server_address: smtp.sendgrid.net, port: 587
+- **Custom SMTP**: Use your own SMTP server settings
+
+To use a different provider:
+1. Update the workflow file `.github/workflows/pressure_check.yml`
+2. Change `server_address` and `server_port` in both email notification steps
+3. Use appropriate credentials in your GitHub secrets
 
 ## Option 3: Slack Notifications
 
