@@ -1,5 +1,11 @@
 name: Barometric Pressure Check
 
+# NOTIFICATIONS:
+# - GitHub sends FREE email notifications for workflow failures to your GitHub notification email
+#   (No setup required - just ensure Actions notifications are enabled at https://github.com/settings/notifications)
+# - Optional: Configure EMAIL_USERNAME, EMAIL_PASSWORD, and EMAIL_TO secrets for custom pressure drop alerts
+#   (See NOTIFICATIONS.md for setup instructions)
+
 on:
   # Run every hour (on the hour)
   schedule:
@@ -60,7 +66,7 @@ jobs:
         fi
     
     - name: Send email notification for pressure drop
-      if: steps.check_alerts.outputs.alert_found == 'true'
+      if: steps.check_alerts.outputs.alert_found == 'true' && secrets.EMAIL_USERNAME != ''
       uses: dawidd6/action-send-mail@v3
       with:
         server_address: smtp.gmail.com
@@ -78,10 +84,13 @@ jobs:
           View full logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           
           This is an automated alert from your Barometric Pressure Monitor.
+          
+          Note: You're receiving this custom alert because you configured EMAIL secrets.
+          GitHub also sends native notifications for workflow failures to your GitHub notification email.
       continue-on-error: true
     
     - name: Send email notification for workflow failure
-      if: failure()
+      if: failure() && secrets.EMAIL_USERNAME != ''
       uses: dawidd6/action-send-mail@v3
       with:
         server_address: smtp.gmail.com
@@ -100,6 +109,9 @@ jobs:
           View details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           
           Please check the logs for more information.
+          
+          Note: You're receiving this custom alert because you configured EMAIL secrets.
+          GitHub also sends native notifications for workflow failures to your GitHub notification email.
       continue-on-error: true
     
     - name: Save pressure data

@@ -97,13 +97,23 @@ You can also trigger a check manually - **see [MANUAL_RUN.md](MANUAL_RUN.md)** f
 
 #### Getting Notifications:
 
-**Email notifications are now built into the workflow!** Just configure three GitHub secrets to enable them:
+**GitHub automatically sends email notifications for workflow failures!** 
+
+- ✅ **Zero setup required** - GitHub sends emails to your notification address
+- ✅ **Completely free** - No third-party services needed
+- ✅ **Works immediately** - Just ensure Actions notifications are enabled in your GitHub settings
+- 📧 Configure at: https://github.com/settings/notifications
+
+**See [GITHUB_NATIVE_NOTIFICATIONS.md](GITHUB_NATIVE_NOTIFICATIONS.md)** for complete details on GitHub's built-in email notifications (no Gmail or third-party services needed).
+
+**Optional: Custom pressure drop alerts** - If you want email notifications specifically for pressure drops (not just failures), you can configure Gmail:
 - `EMAIL_USERNAME` - Your Gmail address
 - `EMAIL_PASSWORD` - Gmail app-specific password
 - `EMAIL_TO` - Where to send alerts
 
 See **[NOTIFICATIONS.md](NOTIFICATIONS.md)** for:
-- **Email setup instructions** (Option 1 - Recommended)
+- **GitHub native notifications** (Option 1 - Recommended, no setup)
+- **Custom email alerts** (Option 2 - Optional Gmail setup)
 - Alternative notification methods (Slack, Discord, SMS, Push notifications)
 - Troubleshooting tips
 
