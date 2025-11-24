@@ -21,6 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      EMAIL_CONFIGURED: ${{ secrets.EMAIL_USERNAME != '' && secrets.EMAIL_USERNAME != null }}
     
     steps:
     - name: Checkout code
@@ -66,7 +68,7 @@ jobs:
         fi
     
     - name: Send email notification for pressure drop
-      if: steps.check_alerts.outputs.alert_found == 'true' && secrets.EMAIL_USERNAME != ''
+      if: steps.check_alerts.outputs.alert_found == 'true' && env.EMAIL_CONFIGURED == 'true'
       uses: dawidd6/action-send-mail@v3
       with:
         server_address: smtp.gmail.com
@@ -90,7 +92,7 @@ jobs:
       continue-on-error: true
     
     - name: Send email notification for workflow failure
-      if: failure() && secrets.EMAIL_USERNAME != ''
+      if: failure() && env.EMAIL_CONFIGURED == 'true'
       uses: dawidd6/action-send-mail@v3
       with:
         server_address: smtp.gmail.com
