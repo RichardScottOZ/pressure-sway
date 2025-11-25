@@ -58,26 +58,21 @@ jobs:
       run: |
         if [ -f pressure_monitor.log ]; then
           if grep -q "PRESSURE DROP DETECTED" pressure_monitor.log; then
-            echo "alert_found=true" >> $GITHUB_OUTPUT
-            echo "ALERT_MESSAGE<<EOF" >> $GITHUB_OUTPUT
-            grep -A 5 "PRESSURE DROP DETECTED" pressure_monitor.log | tail -6 >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
+            echo "alert_found=true" >> "$GITHUB_OUTPUT"
+            echo "ALERT_MESSAGE<<EOF" >> "$GITHUB_OUTPUT"
+            grep -A 5 "PRESSURE DROP DETECTED" pressure_monitor.log | tail -6 >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
           else
-            echo "alert_found=false" >> $GITHUB_OUTPUT
+            echo "alert_found=false" >> "$GITHUB_OUTPUT"
           fi
         else
-          echo "alert_found=false" >> $GITHUB_OUTPUT
+          echo "alert_found=false" >> "$GITHUB_OUTPUT"
         fi
 
     - name: Send Discord notification
       if: steps.check_alerts.outputs.alert_found == 'true' && env.DISCORD_CONFIGURED == 'true'
       run: |
-        payload=$(cat <<'JSON'
-        {
-          "content": "⚠️ **Barometric Pressure Drop Detected**\n\nCheck logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        }
-JSON
-        )
+        payload='{"content":"⚠️ **Barometric Pressure Drop Detected**\n\nCheck logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'
         curl -f -H "Content-Type: application/json" -d "$payload" "${{ secrets.DISCORD_WEBHOOK_URL }}" || echo "Discord notification failed (non-fatal)"
 
     - name: Discord notification skipped
