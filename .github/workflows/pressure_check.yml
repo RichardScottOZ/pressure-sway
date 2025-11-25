@@ -76,7 +76,7 @@ jobs:
         curl -f -H "Content-Type: application/json" -d "$payload" "${{ secrets.DISCORD_WEBHOOK_URL }}" || echo "Discord notification failed (non-fatal)"
 
     - name: Discord notification skipped
-      if: !(steps.check_alerts.outputs.alert_found == 'true' && env.DISCORD_CONFIGURED == 'true')
+      if: steps.check_alerts.outputs.alert_found != 'true' || env.DISCORD_CONFIGURED != 'true'
       run: |
         echo "Skipping Discord. alert_found=${{ steps.check_alerts.outputs.alert_found }} discord_configured=${{ env.DISCORD_CONFIGURED }}"
 
