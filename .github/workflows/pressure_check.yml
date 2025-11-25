@@ -1,18 +1,9 @@
 name: Barometric Pressure Check
 
-# NOTIFICATIONS:
-# - GitHub sends FREE email notifications for workflow failures to your GitHub notification email
-#   (No setup required - just ensure Actions notifications are enabled at https://github.com/settings/notifications)
-# - Optional: Configure EMAIL_USERNAME, EMAIL_PASSWORD, and EMAIL_TO secrets for custom pressure drop alerts
-#   (See NOTIFICATIONS.md for setup instructions)
-
 on:
-  # Run every hour (on the hour)
   schedule:
     - cron: '0 * * * *'
-  # Allow manual trigger from GitHub Actions UI
   workflow_dispatch:
-  # Run on push for testing
   push:
     branches: [ main, master ]
 
@@ -23,22 +14,23 @@ jobs:
       contents: read
     env:
       EMAIL_CONFIGURED: ${{ secrets.EMAIL_USERNAME != '' && secrets.EMAIL_USERNAME != null }}
-    
+      DISCORD_CONFIGURED: ${{ secrets.DISCORD_WEBHOOK_URL != '' && secrets.DISCORD_WEBHOOK_URL != null }}
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
         cache: 'pip'
-    
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    
+
     - name: Load previous pressure data
       uses: actions/cache/restore@v4
       with:
@@ -46,10 +38,20 @@ jobs:
         key: pressure-data-${{ github.sha }}
         restore-keys: |
           pressure-data-
-    
+
     - name: Run pressure monitor
       run: python pressure_monitor.py
-    
+
+    - name: Diagnostics - Flag 403 or fetch failures
+      if: always()
+      run: |
+        if grep -q "403 Forbidden" pressure_monitor.log; then
+          echo "Detected 403 Forbidden responses. Likely requires updated User-Agent or reduced frequency." >&2
+        fi
+        if grep -q "Failed to fetch current pressure data" pressure_monitor.log; then
+          echo "Pressure fetch failed this run." >&2
+        fi
+
     - name: Check for pressure drop alerts
       id: check_alerts
       if: always()
@@ -68,12 +70,26 @@ jobs:
         fi
 
     - name: Send Discord notification
-      if: steps.check_alerts.outputs.alert_found == 'true'
+      if: steps.check_alerts.outputs.alert_found == 'true' && env.DISCORD_CONFIGURED == 'true'
       run: |
-        curl -H "Content-Type: application/json" \
-             -d "{\"content\": \"⚠️ **Barometric Pressure Drop Detected**\n\nCheck logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}\"}" \
-             ${{ secrets.DISCORD_WEBHOOK_URL }}
-    
+        payload=$(cat <<'JSON'
+        {
+          "content": "⚠️ **Barometric Pressure Drop Detected**\n\nCheck logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        }
+JSON
+        )
+        curl -f -H "Content-Type: application/json" -d "$payload" "${{ secrets.DISCORD_WEBHOOK_URL }}" || echo "Discord notification failed (non-fatal)"
+
+    - name: Discord notification skipped
+      if: !(steps.check_alerts.outputs.alert_found == 'true' && env.DISCORD_CONFIGURED == 'true')
+      run: |
+        echo "Skipping Discord. alert_found=${{ steps.check_alerts.outputs.alert_found }} discord_configured=${{ env.DISCORD_CONFIGURED }}"
+
+    - name: Test Discord webhook (manual only)
+      if: github.event_name == 'workflow_dispatch' && env.DISCORD_CONFIGURED == 'true'
+      run: |
+        curl -H "Content-Type: application/json" -d '{"content":"✅ Test message from manual dispatch"}' "${{ secrets.DISCORD_WEBHOOK_URL }}"
+
     - name: Send email notification for pressure drop
       if: steps.check_alerts.outputs.alert_found == 'true' && env.EMAIL_CONFIGURED == 'true'
       uses: dawidd6/action-send-mail@v3
@@ -87,17 +103,17 @@ jobs:
         from: Pressure Monitor <${{ secrets.EMAIL_USERNAME }}>
         body: |
           A significant barometric pressure drop has been detected:
-          
+
           ${{ steps.check_alerts.outputs.ALERT_MESSAGE }}
-          
-          View full logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          
+
+          View full logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
           This is an automated alert from your Barometric Pressure Monitor.
-          
+
           Note: You're receiving this custom alert because you configured EMAIL secrets.
           GitHub also sends native notifications for workflow failures to your GitHub notification email.
       continue-on-error: true
-    
+
     - name: Send email notification for workflow failure
       if: failure() && env.EMAIL_CONFIGURED == 'true'
       uses: dawidd6/action-send-mail@v3
@@ -111,25 +127,25 @@ jobs:
         from: Pressure Monitor <${{ secrets.EMAIL_USERNAME }}>
         body: |
           The barometric pressure monitoring workflow has failed.
-          
+
           Workflow: ${{ github.workflow }}
           Run Number: ${{ github.run_number }}
-          
-          View details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          
+
+          View details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
           Please check the logs for more information.
-          
+
           Note: You're receiving this custom alert because you configured EMAIL secrets.
           GitHub also sends native notifications for workflow failures to your GitHub notification email.
       continue-on-error: true
-    
+
     - name: Save pressure data
       uses: actions/cache/save@v4
       if: always()
       with:
         path: pressure_data.json
         key: pressure-data-${{ github.sha }}
-    
+
     - name: Upload logs
       uses: actions/upload-artifact@v4
       if: always()
