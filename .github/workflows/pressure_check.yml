@@ -35,7 +35,7 @@ jobs:
       uses: actions/cache/restore@v4
       with:
         path: pressure_data.json
-        key: pressure-data-${{ github.sha }}
+        key: pressure-data-${{ github.run_id }}
         restore-keys: |
           pressure-data-
 
@@ -139,7 +139,7 @@ jobs:
       if: always()
       with:
         path: pressure_data.json
-        key: pressure-data-${{ github.sha }}
+        key: pressure-data-${{ github.run_id }}
 
     - name: Upload logs
       uses: actions/upload-artifact@v4
