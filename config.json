@@ -1,7 +1,7 @@
 {
   "station_url": "https://www.bom.gov.au/products/IDS60901/IDS60901.94648.shtml",
   "json_url": "https://reg.bom.gov.au/fwo/IDS60901/IDS60901.94648.json",
-  "pressure_drop_threshold_hpa": 2.0,
+  "pressure_drop_threshold_hpa": 1.0,
   "data_file": "pressure_data.json",
   "log_file": "pressure_monitor.log",
   "user_agent": "PressureSwayMonitor/1.0 (+https://github.com/RichardScottOZ/pressure-sway; contact via GitHub Issues)"
