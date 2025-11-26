@@ -204,5 +204,4 @@ Pull requests welcome! Please ensure your changes:
 - Update documentation as needed
 
 
-[<iframe width="560" height="315" src="https://www.youtube.com/embed/8-DR0H-hO6o?si=V8bT0w6nubOfojV8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-](https://youtu.be/8-DR0H-hO6o?si=mTXtGCmyAP-kTHxJ)
+https://www.youtube.com/watch?v=8-DR0H-hO6o
