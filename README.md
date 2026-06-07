@@ -1,5 +1,5 @@
 # pressure-sway
-Barometric Pressure Monitor for BOM (Bureau of Meteorology) Australia 
+Barometric Pressure Monitor for BOM (Bureau of Meteorology) Australia  
 
 ## Overview
 
